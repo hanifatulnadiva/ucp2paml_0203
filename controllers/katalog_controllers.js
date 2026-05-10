@@ -83,4 +83,16 @@ exports.update_katalog = async (req, res) => {
     }
 };
 
+exports.delete_katalog = async (req, res) => {
+    const {id} = req.params;
+    try{
+        const deleted = await Katalog.destroy({
+            where:{id_katalog:id}
+        });
+        if(deleted) res.status(200).json({message:"Katalog berhasil dihapus!"});
+        else res.status(404).json({message:"Katalog tidak ditemukan!"});
+    }catch(error){
+        res.status(500).json({message:"Gagal menghapus: " +error.message});
+    }
+}
 
