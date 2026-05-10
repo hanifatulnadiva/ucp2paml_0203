@@ -1,6 +1,33 @@
 const {Katalog}= require('../models');
 
+exports.create_katalog = async (req, res) => {
+    try{
+        const {kategoriId, merk, nama_mobil, tipe_mobil, tahun_mobil, transmisi, bahan_bakar, warna_mobil, gambar, kapasitas_penumpang, harga_mobil, kapasitas_mesin} = req.body;
+        const kategori = await kategori.findById(kategoriId);
+        if(!kategori) return res.status(404).json({message:"Kategori tidak ditemukan"});
 
+        const newKatalog = await Katalog.create({
+            kategoriId,
+            merk,
+            nama_mobil,
+            tipe_mobil,
+            tahun_mobil,
+            transmisi,
+            bahan_bakar,
+            warna_mobil,
+            gambar,
+            kapasitas_penumpang,
+            harga_mobil,
+            kapasitas_mesin
+        });
+        res.status(201).json({
+            message:"Katalog berhasil dibuat",
+            data: newKatalog
+        });
+    }catch(error){
+        res.status(500).json({message:"Terjadi kesalahan pada server", error:error.message});
+    }
+};
 
 exports.get_all_katalog = async (req, res) => {
     try{
@@ -38,3 +65,5 @@ exports.get_katalog_by_id = async (req, res) => {
         res.status(500).json({message:error.message});
     }
 }
+exports.update_katalog = async (req, res) => {
+};
