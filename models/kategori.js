@@ -18,12 +18,14 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Kategori.init({
-    jenis_mobil: DataTypes.STRING,
-    allowNull: false,
+    jenis_mobil: {
+      type: DataTypes.STRING,
+      allowNull: false,
       unique: true,
       validate: {
         isJenisMobil: true 
       }
+    }
   }, {
     sequelize,
     modelName: 'Kategori',

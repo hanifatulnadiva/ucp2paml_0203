@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const katalogController = require('../controllers/katalog_controller');
+const katalogController = require('../controllers/katalog_controllers');
 
 router.post('/', katalogController.create_katalog);
 router.put('/:id', katalogController.update_katalog);

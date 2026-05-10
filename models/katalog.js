@@ -22,57 +22,57 @@ module.exports = (sequelize, DataTypes) => {
       allowNull:false,
     },
     merk: {
-      type: Sequelize.ENUM('Toyota', 'Honda', 'Mitsubishi', 'Daihatsu', 'Suzuki', 'Nissan', 'Mazda', 'Isuzu', 'Subaru'),
+      type: DataTypes.ENUM('Toyota', 'Honda', 'Mitsubishi', 'Daihatsu', 'Suzuki', 'Nissan', 'Mazda', 'Isuzu', 'Subaru'),
       allowNull: false
     },
     nama_mobil: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       allowNull: false
     },
     tipe_mobil:{
-      type: Sequelize.ENUM('MPV','SUV', 'Sedan', 'Hatchback', 'Sport', 'Truck Pickup', 'Minivan', 'Coupe'),
+      type: DataTypes.ENUM('MPV','SUV', 'Sedan', 'Hatchback', 'Sport', 'Truck Pickup', 'Minivan', 'Coupe'),
       allowNull: false
     },
     tahun_mobil:{
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       allowNull: false
     },
     transmisi: {
-      type: Sequelize.ENUM('manual', 'otomatis'),
+      type: DataTypes.ENUM('manual', 'otomatis'),
       allowNull: false
     },
     bahan_bakar:{
-      type: Sequelize.ENUM('bensin', 'diesel', 'listrik'),
+      type: DataTypes.ENUM('bensin', 'diesel', 'listrik'),
       allowNull: false
     },
     warna_mobil:{
-      type: Sequelize.STRING, 
+      type: DataTypes.STRING, 
       allowNull: false    
     },
     gambar:{
-      type: Sequelize.TEXT,
+      type: DataTypes.TEXT,
       allowNull: false
     },
     kapasitas_penumpang:{
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       allowNull: false
     },
     harga_mobil:{
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue:100000000
     },
     kapasitas_mesin:{
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       allowNull: false
     },
     createdAt: {
       allowNull: false,
-      type: Sequelize.DATE
+      type: DataTypes.DATE
     },
     updatedAt: {
       allowNull: false,
-      type: Sequelize.DATE
+      type: DataTypes.DATE
     }
   }, {
     sequelize,
