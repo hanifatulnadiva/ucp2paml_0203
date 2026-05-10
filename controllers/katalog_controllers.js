@@ -66,4 +66,21 @@ exports.get_katalog_by_id = async (req, res) => {
     }
 }
 exports.update_katalog = async (req, res) => {
+    const {id} = req.params;
+    try{
+        const katalog = await Katalog.findById({
+            where:{id_katalog:id}
+        });
+        if(!katalog) return res.status(404).json({message:"Katalog tidak ditemukan"});
+        await katalog.update(req.body);
+        res.status(200).json({
+            status:true,
+            message:"Katalog berhasil diperbarui",
+            data:katalog
+        })
+    }catch(error){
+        res.status(500).json({message:error.message});
+    }
 };
+
+
