@@ -12,6 +12,9 @@ const authRoutes = require("./routes/auth");
 
 app.use("/api/auth", authRoutes);
 
+app.use("/api/kategori", require("./routes/kategori_routes"));
+app.use("/api/katalog", require("./routes/katalog_routes"));
+
 app.get("/", (req, res) => {
   res.send("SERVER AKTIF");
 });
