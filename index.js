@@ -19,7 +19,7 @@ app.get("/", (req, res) => {
   res.send("SERVER AKTIF");
 });
 
-db.sequelize.sync().then(() => {
+db.sequelize.sync({ alter: true }).then(() => {
   app.listen(PORT, () => {
     console.log(`Server nyala di http://localhost:${PORT}`);
   });
