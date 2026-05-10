@@ -21,10 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     jenis_mobil: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true,
-      validate: {
-        isJenisMobil: true 
-      }
+      unique: true
     }
   }, {
     sequelize,

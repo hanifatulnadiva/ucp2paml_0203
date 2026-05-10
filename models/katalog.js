@@ -29,10 +29,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-    tipe_mobil:{
-      type: DataTypes.ENUM('MPV','SUV', 'Sedan', 'Hatchback', 'Sport', 'Truck Pickup', 'Minivan', 'Coupe'),
-      allowNull: false
-    },
     tahun_mobil:{
       type: DataTypes.INTEGER,
       allowNull: false

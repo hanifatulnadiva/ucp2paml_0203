@@ -17,10 +17,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      tipe_mobil:{
-        type: Sequelize.ENUM('MPV','SUV', 'Sedan', 'Hatchback', 'Sport', 'Truck Pickup', 'Minivan', 'Coupe'),
-        allowNull: false
-      },
       tahun_mobil:{
         type: Sequelize.INTEGER,
         allowNull: false

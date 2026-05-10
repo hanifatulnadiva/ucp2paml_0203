@@ -2,7 +2,7 @@ const {Katalog}= require('../models');
 
 exports.create_katalog = async (req, res) => {
     try{
-        const {kategoriId, merk, nama_mobil, tipe_mobil, tahun_mobil, transmisi, bahan_bakar, warna_mobil, gambar, kapasitas_penumpang, harga_mobil, kapasitas_mesin} = req.body;
+        const {kategoriId, merk, nama_mobil, tahun_mobil, transmisi, bahan_bakar, warna_mobil, gambar, kapasitas_penumpang, harga_mobil, kapasitas_mesin} = req.body;
         const kategori = await kategori.findById(kategoriId);
         if(!kategori) return res.status(404).json({message:"Kategori tidak ditemukan"});
 
@@ -10,7 +10,6 @@ exports.create_katalog = async (req, res) => {
             kategoriId,
             merk,
             nama_mobil,
-            tipe_mobil,
             tahun_mobil,
             transmisi,
             bahan_bakar,
