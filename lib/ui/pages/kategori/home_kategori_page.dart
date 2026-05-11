@@ -7,8 +7,7 @@ import 'package:lottie/lottie.dart';
 import 'package:ucp2paml_0203/logic/bloc/kategori/kategori_bloc.dart';
 import 'package:ucp2paml_0203/logic/bloc/kategori/kategori_event.dart';
 import 'package:ucp2paml_0203/logic/bloc/kategori/kategori_state.dart';
-import 'package:ucp2paml_0203/ui/pages/kategori/add_kategori_page.dart';
-import 'package:ucp2paml_0203/ui/pages/kategori/update_kategori_page.dart';
+import 'package:ucp2paml_0203/ui/pages/kategori/add_kategori.dart';
 import 'package:ucp2paml_0203/ui/widget/customPage.dart';
 import 'package:ucp2paml_0203/ui/widget/dialog_helper.dart';
 
@@ -19,38 +18,34 @@ class HomeKategoriPage extends StatefulWidget {
   State<HomeKategoriPage> createState() => _HomeKategoriPageState();
 }
 
+
+
 class _HomeKategoriPageState extends State<HomeKategoriPage> {
 
   @override
   void initState() {
     super.initState();
-    // Panggil data kategori di sini!
     context.read<KategoriBloc>().add(FetchKategori());
   }
 
   @override
   Widget build(BuildContext context) {
     return Mainlayout(
-      title: 'KATEGORI',
-      showAppBar: true,
-      showBottomNavigationBar: true,
+      title: 'Kategori Mobil',
+      showBackButton: false,
+      currentIndex: 2,
       actions: [
-        IconButton(icon:const Icon(Icons.add_box_outlined), 
-        onPressed:(){
-          Navigator.pushReplacement(
-            context, 
-            MaterialPageRoute(
-              builder: (context)=> const AddKategoriPage()
-            ));
-        })],
-      floatingActionButton: FloatingActionButton(onPressed: 
-        (){
-          Navigator.push(context,
-          MaterialPageRoute(builder: (content)=> BlocProvider.value(
-            value: context.read<KategoriBloc>(),
-              child: const AddKategoriPage()
-          )));
-        }
+        
+        IconButton(icon:const Icon(Icons.add), color: Colors.white, 
+        onPressed:_showAddBottomSheet
+      )],
+      floatingActionButton: FloatingActionButton(    
+        backgroundColor: Colors.indigo.shade900,    
+        onPressed:_showAddBottomSheet,
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
       child: Stack(
         children: [
@@ -67,6 +62,7 @@ class _HomeKategoriPageState extends State<HomeKategoriPage> {
             listener: (context,state){
               if(state is KategoriCreatedSuccess){
                 _showSnackBar(context, 'Operasi berhasil', Colors.green);
+                context.read<KategoriBloc>().add(FetchKategori());
               }
               else if(state is KategoriError){
                 _showSnackBar (context, state.message, Colors.red);
@@ -146,17 +142,6 @@ class _HomeKategoriPageState extends State<HomeKategoriPage> {
               border: Border.all(color: Colors.white.withOpacity(0.2)),
             ),
             child: ListTile(
-              onTap: () {
-                // final bloc = context.read<KategoriBloc>();
-                // Navigator.push(context, 
-                //   MaterialPageRoute(
-                //     builder: (innerContext)=>BlocProvider.value(
-                //       value:bloc,
-                //       child: EditKategoriPage(Kategori : kategori),
-                //     )
-                //   )
-                // );
-              },
               leading: CircleAvatar(
                 backgroundColor: Colors.white.withOpacity(0.2),
                 child: const Icon(Icons.car_rental, color: Colors.white, ),
@@ -183,7 +168,7 @@ class _HomeKategoriPageState extends State<HomeKategoriPage> {
       bool? confirm = await DialogHelper.showDeleteDialog(
         context: context,
         title: "Konfirmasi Hapus",
-        content: "Apakah kamu yakin ingin menghapus layanan '$jenis_mobil'?",
+        content: "Apakah kamu yakin ingin menghapus jenis mobil '$jenis_mobil'?",
       );
 
       if (confirm == true) {
@@ -204,6 +189,18 @@ class _HomeKategoriPageState extends State<HomeKategoriPage> {
       SnackBar(
         content: Text(msg),
         backgroundColor: color,
+      ),
+    );
+  }
+
+  void _showAddBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, 
+      backgroundColor: Colors.transparent, 
+      builder: (context) => BlocProvider.value(
+        value: this.context.read<KategoriBloc>(), 
+        child: const AddKategoriSheet(),
       ),
     );
   }
