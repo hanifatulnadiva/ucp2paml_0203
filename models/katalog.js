@@ -10,16 +10,25 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Katalog.belongsTo(models.Kategori,{
-        foreignKey:'kategoriId',
-        as :'kategori'
-      })
+      Katalog.belongsTo(models.Kategori, {
+        foreignKey: {
+          name: 'kategoriId',
+          allowNull: true // Letakkan di dalam objek foreignKey
+        },
+        as: 'kategori',
+        onDelete: 'SET NULL',
+        onUpdate: 'CASCADE'
+      });
     }
   }
   Katalog.init({
     kategoriId:{
       type:DataTypes.INTEGER,
-      allowNull:false,
+      allowNull:true,
+      references: {
+        model: 'Kategoris',
+        key: 'id'
+      }
     },
     merk: {
       type: DataTypes.ENUM('Toyota', 'Honda', 'Mitsubishi', 'Daihatsu', 'Suzuki', 'Nissan', 'Mazda', 'Isuzu', 'Subaru'),

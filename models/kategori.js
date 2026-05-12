@@ -13,7 +13,9 @@ module.exports = (sequelize, DataTypes) => {
       Kategori.hasMany(
         models.Katalog, {
           foreignKey: 'kategoriId', 
-          as:'katalog'
+          as:'katalog',
+          onDelete:'SET NULL',
+          onUpdate: 'CASCADE'
         });
     }
   }
