@@ -1,4 +1,6 @@
-class KatalogModel{
+import 'package:ucp2paml_0203/data/models/kategori_model.dart';
+
+class KatalogModel {
   final int id;
   final String merk;
   final String nama_mobil;
@@ -11,10 +13,8 @@ class KatalogModel{
   final int harga_mobil;
   final int kapasitas_mesin;
   final int kategoriId;
-
-
-
-
+  final KategoriModel? kategori; 
+  
   KatalogModel({
     required this.id,
     required this.merk,
@@ -27,24 +27,27 @@ class KatalogModel{
     required this.kapasitas_penumpang,
     required this.harga_mobil,
     required this.kapasitas_mesin,
-    required this.kategoriId
-
+    required this.kategoriId,
+    this.kategori,
   });
 
-  factory KatalogModel.fromJson(Map<String,dynamic> json){
+  factory KatalogModel.fromJson(Map<String, dynamic> json) {
     return KatalogModel(
-      id: json['id'], 
-      merk:json['merk'],
+      id: json['id'],
+      merk: json['merk'],
       nama_mobil: json['nama_mobil'],
-      tahun_mobil:json['tahun_mobil'],
+      tahun_mobil: json['tahun_mobil'],
       transmisi: json['transmisi'],
-      bahan_bakar:json['bahan_bakar'],
-      warna_mobil:json['warna_mobil'],
-      gambar:json['gambar'],
+      bahan_bakar: json['bahan_bakar'],
+      warna_mobil: json['warna_mobil'],
+      gambar: json['gambar'],
       kapasitas_penumpang: json['kapasitas_penumpang'],
       harga_mobil: json['harga_mobil'],
       kapasitas_mesin: json['kapasitas_mesin'],
-      kategoriId: json['kategoriId']
+      kategoriId: json['kategoriId'],
+      kategori: json['Kategori'] != null
+          ? KategoriModel.fromJson(json['Kategori'])
+          : null,
     );
   }
 }
