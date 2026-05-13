@@ -7,6 +7,8 @@ import 'package:lottie/lottie.dart';
 import 'package:ucp2paml_0203/logic/bloc/kategori/kategori_bloc.dart';
 import 'package:ucp2paml_0203/logic/bloc/kategori/kategori_event.dart';
 import 'package:ucp2paml_0203/logic/bloc/kategori/kategori_state.dart';
+import 'package:ucp2paml_0203/ui/pages/home/dashboard.dart';
+import 'package:ucp2paml_0203/ui/pages/katalog/home_katalog_page.dart';
 import 'package:ucp2paml_0203/ui/pages/kategori/add_kategori.dart';
 import 'package:ucp2paml_0203/ui/widget/customPage.dart';
 import 'package:ucp2paml_0203/ui/widget/dialog_helper.dart';
@@ -34,96 +36,131 @@ class _HomeKategoriPageState extends State<HomeKategoriPage> {
       title: 'Kategori Mobil',
       showBackButton: false,
       currentIndex: 2,
+      onBottomNavTap: (index){
+        if(index==0){
+          Navigator.pushReplacement(
+            context, 
+            MaterialPageRoute(builder: (_)=> const DashboardPage())
+          );
+        }if(index == 1){
+          Navigator.pushReplacement(
+            context, 
+            MaterialPageRoute(builder: (_)=> const HomeKatalogPage())
+          );
+        }if(index==2){
+          return;
+        }
+      },
       actions: [
-        
-        IconButton(icon:const Icon(Icons.add), color: Colors.white, 
-        onPressed:_showAddBottomSheet
-      )],
+        Padding(
+          padding: const EdgeInsets.only(right: 8.0),
+          child: CircleAvatar(
+            radius: 25, 
+            backgroundColor: Colors.white.withOpacity(0.2), 
+            child: IconButton(
+              iconSize: 20, 
+              padding: EdgeInsets.zero,
+              icon: const Icon(Icons.add, color: Colors.white),
+              onPressed: _showAddBottomSheet,
+            ),
+          ),
+        ),
+      ],
+      
       floatingActionButton: FloatingActionButton(    
-        backgroundColor: Colors.indigo.shade900,    
+        backgroundColor: Mainlayout.accentorange,    
         onPressed:_showAddBottomSheet,
         child: const Icon(
           Icons.add,
           color: Colors.white,
         ),
       ),
-      child: Stack(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [Color(0xFF1A237E), Color(0xFF4D1457)],
-              ),
-            ),
-          ),
-          BlocListener<KategoriBloc, KategoriState>(
-            listener: (context,state){
-              if(state is KategoriCreatedSuccess){
-                _showSnackBar(context, 'Operasi berhasil', Colors.green);
-                context.read<KategoriBloc>().add(FetchKategori());
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Mainlayout.primaryColor
+        ),
+
+        child: BlocListener<KategoriBloc, KategoriState>(
+          listener: (context, state) {
+            if (state is KategoriCreatedSuccess) {
+              _showSnackBar(context, 'Operasi berhasil', Colors.green);
+              context.read<KategoriBloc>().add(FetchKategori());
+            } else if (state is KategoriError) {
+              _showSnackBar(context, state.message, Colors.red);
+              context.read<KategoriBloc>().add(FetchKategori());
+            }
+          },
+
+          child: BlocBuilder<KategoriBloc, KategoriState>(
+            builder: (context, state) {
+
+              if (state is KategoriLoading) {
+                return Center(
+                  child: Lottie.asset('assets/loading.json', width: 200),
+                );
               }
-              else if(state is KategoriError){
-                _showSnackBar (context, state.message, Colors.red);
-              }
-            },
-            child: BlocBuilder<KategoriBloc, KategoriState>(
-              builder: (context, state){
-                if(state is KategoriLoading){
-                  return Center(
-                    child: Lottie.asset('assets/loading.json', width: 200),);
-                }else if(state is KategoriLoaded){
-                  if(state.kategoriList.isEmpty){
-                    return const Center(
-                      child: Text('Belum Ada Kategori mobil',
-                      style: TextStyle(color:Colors.blueGrey),),
-                    );
-                  }
-                  return CustomRefreshIndicator(
+
+              if (state is KategoriLoaded) {
+                if (state.kategoriList.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      'Belum Ada Kategori mobil',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  );
+                }
+
+                return CustomRefreshIndicator(
                   onRefresh: () async {
                     context.read<KategoriBloc>().add(FetchKategori());
                     await Future.delayed(const Duration(seconds: 2));
                   },
+
                   builder: (context, child, controller) {
-                    return AnimatedBuilder(
-                      animation: controller,
-                      builder: (context, _) {
-                        return Stack(
-                          alignment: Alignment.topCenter,
-                          children: [
-                            if (!controller.isIdle)
-                              Positioned(
-                                top: 50 * controller.value,
-                                child: Image.asset(
-                                  'assets/loading.json',
-                                  height: 80,
-                                ),
-                              ),
-                            Transform.translate(
-                              offset: Offset(0, 100 * controller.value),
-                              child: child,
-                            ),
-                          ],
-                        );
-                      },
+                    return Transform.translate(
+                      offset: Offset(0, 80 * controller.value),
+                      child: child,
                     );
                   },
+
                   child: ListView.builder(
-                    padding: const EdgeInsets.fromLTRB(16, 100, 16, 100),
+                    padding: const EdgeInsets.fromLTRB(16, 20, 16, 120),
+
                     itemCount: state.kategoriList.length,
-                      itemBuilder: (context,index) {
-                        final kategori = state.kategoriList[index];
-                        return _buildGlassCard(context, kategori);
-                      },
+
+                    itemBuilder: (context, index) {
+                      final kategori =
+                          state.kategoriList[index];
+
+                      return _buildGlassCard(context, kategori);
+                    },
+                  ),
+                );
+              }
+
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Gagal memuat data",
+                      style: TextStyle(color: Colors.white, fontSize: 16),
                     ),
-                  );
-                }
-              return const Center(child:Text("Gagal memuat data"));
-              }  
-            )
-          )
-        ],
+                    const SizedBox(height: 10),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        context.read<KategoriBloc>().add(FetchKategori());
+                      },
+                      icon: const Icon(Icons.refresh),
+                      label: const Text("Coba Lagi"),
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.white24),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
       ),
     );
   }
@@ -164,25 +201,25 @@ class _HomeKategoriPageState extends State<HomeKategoriPage> {
     );
   }
 
-    void _handleDelete(int id, String jenis_mobil) async {
-      bool? confirm = await DialogHelper.showDeleteDialog(
-        context: context,
-        title: "Konfirmasi Hapus",
-        content: "Apakah kamu yakin ingin menghapus jenis mobil '$jenis_mobil'?",
+  void _handleDelete(int id, String jenis_mobil) async {
+    bool? confirm = await DialogHelper.showDeleteDialog(
+      context: context,
+      title: "Konfirmasi Hapus",
+      content: "Apakah kamu yakin ingin menghapus jenis mobil '$jenis_mobil'?",
+    );
+
+    if (confirm == true) {
+      print("Menghapus data dengan ID: $id");
+      
+      context.read<KategoriBloc>().add(DeleteKategori(id));
+
+      context.read<KategoriBloc>().add(FetchKategori());
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Kategori berhasil dihapus"), backgroundColor: Colors.green),
       );
-
-      if (confirm == true) {
-        print("Menghapus data dengan ID: $id");
-        
-        context.read<KategoriBloc>().add(DeleteKategori(id));
-
-        context.read<KategoriBloc>().add(FetchKategori());
-        
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Kategori berhasil dihapus"), backgroundColor: Colors.green),
-        );
-      }
     }
+  }
 
   void _showSnackBar(BuildContext context, String msg, Color color) {
     ScaffoldMessenger.of(context).showSnackBar(
