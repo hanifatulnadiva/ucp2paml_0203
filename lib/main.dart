@@ -7,8 +7,6 @@ import 'package:ucp2paml_0203/logic/bloc/auth/auth_bloc.dart';
 import 'package:ucp2paml_0203/logic/bloc/katalog/katalog_bloc.dart';
 import 'package:ucp2paml_0203/logic/bloc/kategori/kategori_bloc.dart';
 import 'package:ucp2paml_0203/ui/pages/auth/login_page.dart';
-import 'package:ucp2paml_0203/ui/pages/home/dashboard.dart';
-import 'package:ucp2paml_0203/ui/pages/kategori/home_kategori_page.dart';
 
 void main() {
   runApp(const MyApp());

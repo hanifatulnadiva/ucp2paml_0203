@@ -9,7 +9,6 @@ import 'package:ucp2paml_0203/logic/bloc/auth/auth_event.dart';
 import 'package:ucp2paml_0203/logic/bloc/auth/auth_state.dart';
 import 'package:ucp2paml_0203/ui/pages/auth/register_page.dart';
 import 'package:ucp2paml_0203/ui/pages/home/Dashboard_admin.dart';
-import 'package:ucp2paml_0203/ui/pages/home/dashboard_user.dart';
 import 'package:ucp2paml_0203/ui/widget/customPage.dart';
 
 class LoginPage extends StatefulWidget {
