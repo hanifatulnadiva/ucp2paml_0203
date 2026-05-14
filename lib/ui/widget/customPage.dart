@@ -13,7 +13,7 @@ class Mainlayout extends StatelessWidget {
   // static const Color InputBorderColor = Color(0xf3f6ffff);
   // static const Color labelColor = Color(0x80797979);
 
-  static const primaryColor = Color.fromARGB(255, 60, 72, 85);
+  static const primaryColor = Color(0xFF0F1923);
   static const backgroundColor = Color.fromRGBO(170, 129, 58, 1);
   static const Color accentorange = Color.fromARGB(249, 71, 64, 79);
   static const Color accentColor = Color.fromARGB(128, 1, 1, 1);
@@ -54,6 +54,7 @@ class Mainlayout extends StatelessWidget {
   Widget build(BuildContext context) {
     
     return Scaffold(
+      backgroundColor: Mainlayout.primaryColor,
       appBar: showAppBar
           ? AppBar(
               title: Text(
@@ -66,11 +67,22 @@ class Mainlayout extends StatelessWidget {
                 ),
               ),
               centerTitle: true,
-              leading: showBackButton ?
-                IconButton(
-                  onPressed: ()=>Navigator.pop(context), 
-                  icon: const Icon(Icons.arrow_back, color: Colors.white, size: 20,)
-                ) :null,
+              leading: leading ?? (showBackButton && Navigator.canPop(context)
+              ? Padding(
+                padding: const EdgeInsets.all(8.0), 
+                child: CircleAvatar(
+                  backgroundColor: Colors.white.withOpacity(0.2), 
+                  child: IconButton(
+                    onPressed: () => Navigator.maybePop(context),
+                    icon: const Icon(
+                      Icons.arrow_back_ios_new, 
+                      color: Colors.white,
+                      size: 16, 
+                    ),
+                  ),
+                ),
+              )
+              : null),
               actions: actions,
               backgroundColor: primaryColor,
             )

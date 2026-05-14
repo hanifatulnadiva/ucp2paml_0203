@@ -22,6 +22,7 @@ class CustomDropdown extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 16),
       child: DropdownButtonFormField<String>(
         decoration: InputDecoration(
+          floatingLabelBehavior: FloatingLabelBehavior.never,
           labelText: label,
           prefixIcon: icon != null ? Icon(icon) : null,
           border: const OutlineInputBorder(
