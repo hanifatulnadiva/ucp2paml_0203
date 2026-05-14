@@ -7,6 +7,7 @@ import 'package:lottie/lottie.dart';
 import 'package:ucp2paml_0203/logic/bloc/kategori/kategori_bloc.dart';
 import 'package:ucp2paml_0203/logic/bloc/kategori/kategori_event.dart';
 import 'package:ucp2paml_0203/logic/bloc/kategori/kategori_state.dart';
+import 'package:ucp2paml_0203/ui/pages/home/Dashboard_admin.dart';
 import 'package:ucp2paml_0203/ui/pages/home/dashboard.dart';
 import 'package:ucp2paml_0203/ui/pages/katalog/home_katalog_page.dart';
 import 'package:ucp2paml_0203/ui/pages/kategori/add_kategori.dart';
@@ -40,7 +41,7 @@ class _HomeKategoriPageState extends State<HomeKategoriPage> {
         if(index==0){
           Navigator.pushReplacement(
             context, 
-            MaterialPageRoute(builder: (_)=> const DashboardPage())
+            MaterialPageRoute(builder: (_)=> const DashboardAdmin())
           );
         }if(index == 1){
           Navigator.pushReplacement(

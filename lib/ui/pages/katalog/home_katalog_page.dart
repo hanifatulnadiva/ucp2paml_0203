@@ -9,6 +9,7 @@ import 'package:ucp2paml_0203/logic/bloc/katalog/katalog_event.dart';
 import 'package:ucp2paml_0203/logic/bloc/katalog/katalog_state.dart';
 import 'package:ucp2paml_0203/logic/bloc/kategori/kategori_bloc.dart';
 import 'package:ucp2paml_0203/logic/bloc/kategori/kategori_event.dart';
+import 'package:ucp2paml_0203/ui/pages/home/Dashboard_admin.dart';
 import 'package:ucp2paml_0203/ui/pages/home/dashboard.dart';
 import 'package:ucp2paml_0203/ui/pages/katalog/add_katalog_page.dart';
 import 'package:ucp2paml_0203/ui/pages/katalog/detail_katalog.dart';
@@ -68,7 +69,7 @@ class _HomeKatalogPageState extends State<HomeKatalogPage> {
         if (index == 0) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (_) => const DashboardPage()),
+            MaterialPageRoute(builder: (_) => const DashboardAdmin()),
           );
         } else if (index == 1) {
           return;
