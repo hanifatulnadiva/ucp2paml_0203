@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'dart:io';
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -25,24 +26,21 @@ class HomeKatalogPage extends StatefulWidget {
 class _HomeKatalogPageState extends State<HomeKatalogPage> {
   final ScrollController _scrollController = ScrollController();
 
-  // Filter merk sesuai ENUM di database
   final List<String> _merkList = [
-    'Semua', 'Toyota', 'Honda', 'Mitsubishi',
-    'Daihatsu', 'Suzuki', 'Nissan', 'Mazda', 'Isuzu', 'Subaru',
+    'Semua','Toyota','Honda','Mitsubishi','Daihatsu','Suzuki','Nissan','Mazda','Isuzu','Subaru',
   ];
   String _selectedMerk = 'Semua';
 
-  // Warna per merk
   final Map<String, Color> _merkColors = {
-    'Toyota':     Color(0xFF378ADD),
-    'Honda':      Color(0xFFD85A30),
+    'Toyota': Color(0xFF378ADD),
+    'Honda': Color(0xFFD85A30),
     'Mitsubishi': Color(0xFF7F77DD),
-    'Daihatsu':   Color(0xFF1D9E75),
-    'Suzuki':     Color(0xFFBA7517),
-    'Nissan':     Color(0xFF639922),
-    'Mazda':      Color(0xFFD4537E),
-    'Isuzu':      Color(0xFF5F5E5A),
-    'Subaru':     Color(0xFF185FA5),
+    'Daihatsu': Color(0xFF1D9E75),
+    'Suzuki': Color(0xFFBA7517),
+    'Nissan': Color(0xFF639922),
+    'Mazda': Color(0xFFD4537E),
+    'Isuzu': Color(0xFF5F5E5A),
+    'Subaru': Color(0xFF185FA5),
   };
 
   Color _colorFor(String merk) => _merkColors[merk] ?? Colors.white54;
@@ -51,6 +49,7 @@ class _HomeKatalogPageState extends State<HomeKatalogPage> {
   void initState() {
     super.initState();
     context.read<KatalogBloc>().add(FetchKatalog());
+    context.read<KategoriBloc>().add(FetchKategori());
   }
 
   @override
@@ -71,10 +70,9 @@ class _HomeKatalogPageState extends State<HomeKatalogPage> {
             context,
             MaterialPageRoute(builder: (_) => const DashboardPage()),
           );
-        }else if (index == 1) {
+        } else if (index == 1) {
           return;
-        }
-        else if (index == 2) {
+        } else if (index == 2) {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (_) => const HomeKategoriPage()),
@@ -88,13 +86,19 @@ class _HomeKatalogPageState extends State<HomeKatalogPage> {
             backgroundColor: Colors.white.withOpacity(0.2),
             child: IconButton(
               icon: const Icon(Icons.add, color: Colors.white),
-              onPressed: () => _navigateToTambah(),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AddKatalogPage()),
+              ),
             ),
           ),
         ),
       ],
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _navigateToTambah(),
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const AddKatalogPage()),
+        ),
         backgroundColor: Mainlayout.primaryColor,
         child: const Icon(Icons.add, color: Colors.white),
       ),
@@ -103,11 +107,14 @@ class _HomeKatalogPageState extends State<HomeKatalogPage> {
         child: BlocListener<KatalogBloc, KatalogState>(
           listener: (context, state) {
             if (state is KatalogCreatedSuccess) {
-              _showSnackBar(context, 'Berhasil menambahkan katalog', Colors.green);
+              _showSnackBar(
+                context,
+                '  Operasi berhasil',
+                const Color.fromARGB(43, 122, 191, 125),
+              );
               context.read<KatalogBloc>().add(FetchKatalog());
-            }
-            if (state is DeleteKatalog) {
-              _showSnackBar(context, 'Katalog berhasil dihapus', Colors.orange);
+            } else if (state is KatalogError) {
+              _showSnackBar(context, state.message, Colors.red);
               context.read<KatalogBloc>().add(FetchKatalog());
             }
           },
@@ -123,8 +130,8 @@ class _HomeKatalogPageState extends State<HomeKatalogPage> {
                 final filtered = _selectedMerk == 'Semua'
                     ? state.katalogList
                     : state.katalogList
-                        .where((k) => k.merk == _selectedMerk)
-                        .toList();
+                          .where((k) => k.merk == _selectedMerk)
+                          .toList();
 
                 return Column(
                   children: [
@@ -133,7 +140,9 @@ class _HomeKatalogPageState extends State<HomeKatalogPage> {
                       child: ListView.separated(
                         scrollDirection: Axis.horizontal,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
                         itemCount: _merkList.length,
                         separatorBuilder: (_, __) => const SizedBox(width: 8),
                         itemBuilder: (_, i) {
@@ -143,28 +152,28 @@ class _HomeKatalogPageState extends State<HomeKatalogPage> {
                               ? Colors.white
                               : _colorFor(merk);
 
-                          // Hitung jumlah per merk
                           final count = merk == 'Semua'
                               ? state.katalogList.length
                               : state.katalogList
-                                  .where((k) => k.merk == merk)
-                                  .length;
+                                    .where((k) => k.merk == merk)
+                                    .length;
 
                           return GestureDetector(
-                            onTap: () =>
-                                setState(() => _selectedMerk = merk),
+                            onTap: () => setState(() => _selectedMerk = merk),
                             child: AnimatedContainer(
                               duration: const Duration(milliseconds: 150),
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 4),
+                                horizontal: 12,
+                                vertical: 4,
+                              ),
                               decoration: BoxDecoration(
                                 color: isActive
-                                    ? Colors.white.withOpacity(0.2)
+                                    ? Mainlayout.backgroundColor.withOpacity(0.1)
                                     : Colors.white.withOpacity(0.07),
                                 borderRadius: BorderRadius.circular(99),
                                 border: Border.all(
                                   color: isActive
-                                      ? Colors.white
+                                      ? Mainlayout.backgroundColor
                                       : Colors.white.withOpacity(0.3),
                                   width: isActive ? 1.5 : 0.5,
                                 ),
@@ -198,7 +207,9 @@ class _HomeKatalogPageState extends State<HomeKatalogPage> {
                                   const SizedBox(width: 4),
                                   Container(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 5, vertical: 1),
+                                      horizontal: 5,
+                                      vertical: 1,
+                                    ),
                                     decoration: BoxDecoration(
                                       color: Colors.white.withOpacity(0.15),
                                       borderRadius: BorderRadius.circular(99),
@@ -206,7 +217,9 @@ class _HomeKatalogPageState extends State<HomeKatalogPage> {
                                     child: Text(
                                       '$count',
                                       style: const TextStyle(
-                                          fontSize: 10, color: Colors.white70),
+                                        fontSize: 10,
+                                        color: Colors.white70,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -217,22 +230,26 @@ class _HomeKatalogPageState extends State<HomeKatalogPage> {
                       ),
                     ),
 
-                    // ── Grid Katalog ──
                     Expanded(
                       child: filtered.isEmpty
                           ? Center(
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const Icon(Icons.directions_car_outlined,
-                                      color: Colors.white38, size: 60),
+                                  const Icon(
+                                    Icons.directions_car_outlined,
+                                    color: Colors.white38,
+                                    size: 60,
+                                  ),
                                   const SizedBox(height: 12),
                                   Text(
                                     _selectedMerk == 'Semua'
                                         ? 'Belum ada katalog'
                                         : 'Tidak ada mobil $_selectedMerk',
                                     style: const TextStyle(
-                                        color: Colors.white70, fontSize: 14),
+                                      color: Colors.white70,
+                                      fontSize: 14,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -241,7 +258,8 @@ class _HomeKatalogPageState extends State<HomeKatalogPage> {
                               onRefresh: () async {
                                 context.read<KatalogBloc>().add(FetchKatalog());
                                 await Future.delayed(
-                                    const Duration(seconds: 2));
+                                  const Duration(seconds: 2),
+                                );
                               },
                               builder: (context, child, controller) =>
                                   Transform.translate(
@@ -250,15 +268,14 @@ class _HomeKatalogPageState extends State<HomeKatalogPage> {
                                   ),
                               child: GridView.builder(
                                 controller: _scrollController,
-                                padding: const EdgeInsets.fromLTRB(
-                                    16, 12, 16, 100),
+                                padding: const EdgeInsets.fromLTRB(16,12,16,100,),
                                 gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 15,
-                                  mainAxisSpacing: 15,
-                                  childAspectRatio: 0.72,
-                                ),
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount: 2,
+                                    crossAxisSpacing: 15,
+                                    mainAxisSpacing: 15,
+                                    childAspectRatio: 0.72,
+                                  ),
                                 itemCount: filtered.length,
                                 itemBuilder: (context, index) {
                                   final katalog = filtered[index];
@@ -276,11 +293,16 @@ class _HomeKatalogPageState extends State<HomeKatalogPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.error_outline,
-                          color: Colors.white54, size: 50),
+                      const Icon(
+                        Icons.error_outline,
+                        color: Colors.white54,
+                        size: 50,
+                      ),
                       const SizedBox(height: 12),
-                      Text(state.message,
-                          style: const TextStyle(color: Colors.white70)),
+                      Text(
+                        state.message,
+                        style: const TextStyle(color: Colors.white70),
+                      ),
                       const SizedBox(height: 12),
                       ElevatedButton(
                         onPressed: () =>
@@ -293,8 +315,10 @@ class _HomeKatalogPageState extends State<HomeKatalogPage> {
               }
 
               return const Center(
-                child: Text('Gagal memuat data',
-                    style: TextStyle(color: Colors.white)),
+                child: Text(
+                  'Gagal memuat data',
+                  style: TextStyle(color: Colors.white),
+                ),
               );
             },
           ),
@@ -331,7 +355,6 @@ class _HomeKatalogPageState extends State<HomeKatalogPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ── Gambar Mobil ──
                 Expanded(
                   flex: 3,
                   child: Container(
@@ -339,14 +362,16 @@ class _HomeKatalogPageState extends State<HomeKatalogPage> {
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.08),
                       borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(20)),
+                        top: Radius.circular(20),
+                      ),
                     ),
                     child: katalog.gambar != null && katalog.gambar != ''
                         ? ClipRRect(
                             borderRadius: const BorderRadius.vertical(
-                                top: Radius.circular(20)),
-                            child: Image.network(
-                              "http://10.0.2.2:3000/api/${katalog.gambar}",
+                              top: Radius.circular(20),
+                            ),
+                            child: Image.file(
+                              File(katalog.gambar),
                               fit: BoxFit.cover,
                               errorBuilder: (_, __, ___) => Icon(
                                 Icons.directions_car_rounded,
@@ -363,92 +388,127 @@ class _HomeKatalogPageState extends State<HomeKatalogPage> {
                   ),
                 ),
 
-                // ── Info Mobil ──
                 Expanded(
-                  flex: 2,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Badge merk
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 6, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: color.withOpacity(0.25),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: Text(
-                            katalog.merk ?? '',
-                            style: TextStyle(
-                                fontSize: 9,
-                                color: color,
-                                fontWeight: FontWeight.w600),
+                flex: 2,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: color.withOpacity(0.25),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          katalog.merk ?? '',
+                          style: TextStyle(
+                            fontSize: 9,
+                            color: color,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          katalog.nama_mobil ?? '',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        katalog.nama_mobil ?? '',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
                         ),
-                        Text(
-                          katalog.Kategori?.jenis_mobil ?? 'Kategori',
-                          style: const TextStyle(
-                              color: Colors.white60, fontSize: 11),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        katalog.kategori?.jenis_mobil ?? 'Kategori',
+                        style: const TextStyle(
+                          color: Colors.white60,
+                          fontSize: 11,
                         ),
-                        const Spacer(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      
+                      const SizedBox(height: 2), 
+                      
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded( 
+                            child: Text(
                               'Rp ${((katalog.harga_mobil ?? 0) / 1e6).round()}jt',
                               style: TextStyle(
                                 color: color,
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
                               ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            GestureDetector(
-                              onTap: () => _handleDelete(
-                                  katalog.id, katalog.nama_mobil ?? ''),
-                              child: const Icon(Icons.delete_outline,
-                                  color: Colors.redAccent, size: 20),
+                          ),
+                          SizedBox(height: 30, width: 30,
+                          child:PopupMenuButton<String>(
+                            padding: EdgeInsets.zero, 
+                            icon: const Icon(
+                              Icons.more_vert,
+                              color: Colors.white70,
+                              size: 20,
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
+                            color: const Color(0xFF2A2A2A),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            onSelected: (value) {
+                              if (value == 'edit') {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => AddKatalogPage(katalog: katalog),
+                                  ),
+                                );
+                              }
+                              if (value == 'delete') {
+                                _handleDelete(
+                                  katalog.id,
+                                  katalog.nama_mobil ?? '',
+                                );
+                              }
+                            },
+                            itemBuilder: (context) => [
+                              const PopupMenuItem(
+                                value: 'edit',
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.edit, color: Colors.white, size: 18),
+                                    SizedBox(width: 10),
+                                    Text('Edit', style: TextStyle(color: Colors.white)),
+                                  ],
+                                ),
+                              ),
+                              const PopupMenuItem(
+                                value: 'delete',
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.delete, color: Colors.redAccent, size: 18),
+                                    SizedBox(width: 10),
+                                    Text('Hapus', style: TextStyle(color: Colors.redAccent)),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          )
+                        ],
+                      ),
+                    ],
                   ),
                 ),
+              )
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  void _navigateToTambah() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => MultiBlocProvider(
-          providers: [
-            BlocProvider.value(value: context.read<KatalogBloc>()),
-            // Sediakan KategoriBloc dan langsung fetch
-            BlocProvider(
-              create: (_) => context.read<KategoriBloc>()
-                ..add(FetchKategori()),
-            ),
-          ],
-          child: const AddKatalogPage(),
         ),
       ),
     );
@@ -466,7 +526,8 @@ class _HomeKatalogPageState extends State<HomeKatalogPage> {
   }
 
   void _showSnackBar(BuildContext context, String msg, Color color) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(msg), backgroundColor: color));
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(msg), backgroundColor: color));
   }
 }
