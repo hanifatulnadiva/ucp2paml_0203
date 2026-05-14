@@ -281,6 +281,7 @@ class _AddKatalogPageState extends State<AddKatalogPage> {
                           const SizedBox(height: 8),
                           GlassTextField(
                             controller: namamobilController,
+                            keyboardType: TextInputType.name,
                             hint: "Contoh: Avanza G",
                             validator: (value) => (value == null || value.isEmpty)
                                 ? 'Nama mobil tidak boleh kosong'
@@ -299,7 +300,7 @@ class _AddKatalogPageState extends State<AddKatalogPage> {
                                 return 'Tahun tidak boleh kosong';
                               }
                               final tahun = int.tryParse(value);
-                              if (tahun == null || tahun < 1990 || tahun > 2030) {
+                              if (tahun == null || tahun < 1990 || tahun > 2026) {
                                 return 'Tahun tidak valid';
                               }
                               return null;
@@ -337,8 +338,19 @@ class _AddKatalogPageState extends State<AddKatalogPage> {
                                   controller: kapasitaspenumpangController,
                                   hint: "Penumpang",
                                   keyboardType: TextInputType.number,
-                                  validator: (value) =>
-                                      (value == null || value.isEmpty) ? 'Wajib diisi' : null,
+                                  validator: (value){
+                                    if (value == null || value.trim().isEmpty) {
+                                        return 'Jumlah penumpang wajib diisi';
+                                      }
+                                      final penumpang = int.tryParse(value);
+                                      if (penumpang == null) {
+                                        return 'Harus berupa angka';
+                                      }
+                                      if (penumpang < 1 || penumpang > 100) {
+                                        return 'Jumlah penumpang tidak valid';
+                                      }
+                                      return null;
+                                  }
                                 ),
                               ),
                               const SizedBox(width: 10),
@@ -347,8 +359,19 @@ class _AddKatalogPageState extends State<AddKatalogPage> {
                                   controller: kapasitasmesinController,
                                   hint: "Mesin (cc)",
                                   keyboardType: TextInputType.number,
-                                  validator: (value) =>
-                                      (value == null || value.isEmpty) ? 'Wajib diisi' : null,
+                                  validator: (value) {
+                                    if (value == null || value.trim().isEmpty) {
+                                      return 'Kapasitas mesin wajib diisi';
+                                    }
+                                    final cc = int.tryParse(value);
+                                    if (cc == null) {
+                                      return 'Harus berupa angka';
+                                    }
+                                    if (cc < 50 || cc > 10000) {
+                                      return 'CC mesin tidak masuk akal';
+                                    }
+                                    return null;
+                                  },
                                 ),
                               ),
                             ],
@@ -371,10 +394,18 @@ class _AddKatalogPageState extends State<AddKatalogPage> {
                           const SizedBox(height: 8),
                           GlassTextField(
                             controller: warnamobilController,
+                            keyboardType: TextInputType.text,
                             hint: "Contoh: Putih",
-                            validator: (value) => (value == null || value.isEmpty)
-                                ? 'Warna tidak boleh kosong'
-                                : null,
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Warna wajib diisi';
+                              }
+                              final regex = RegExp(r'^[a-zA-Z\s]+$');
+                              if (!regex.hasMatch(value)) {
+                                return 'Warna hanya boleh huruf';
+                              }
+                              return null;
+                            },
                           ),
                           const SizedBox(height: 15),
 
