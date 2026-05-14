@@ -8,8 +8,9 @@ import 'package:ucp2paml_0203/logic/bloc/auth/auth_bloc.dart';
 import 'package:ucp2paml_0203/logic/bloc/auth/auth_event.dart';
 import 'package:ucp2paml_0203/logic/bloc/auth/auth_state.dart';
 import 'package:ucp2paml_0203/ui/pages/auth/register_page.dart';
-import 'package:ucp2paml_0203/ui/pages/home/dashboard.dart';
-import 'package:ucp2paml_0203/ui/pages/katalog/home_katalog_page.dart';
+import 'package:ucp2paml_0203/ui/pages/home/Dashboard_admin.dart';
+import 'package:ucp2paml_0203/ui/pages/home/dashboard_user.dart';
+import 'package:ucp2paml_0203/ui/widget/customPage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -42,13 +43,13 @@ class _LoginPageState extends State<LoginPage> {
               Navigator.pushReplacement(
               context, 
               MaterialPageRoute(
-                builder: (context)=> const Dashboard()),
+                builder: (context)=> const DashboardAdmin()),
               );
             } else{
               Navigator.pushReplacement(
               context, 
               MaterialPageRoute(
-                builder: (context)=> const HomeKatalogPage()),
+                builder: (context)=> const DashboardAdmin()),
               );
             }
           }else if(state is AuthError){
@@ -65,7 +66,7 @@ class _LoginPageState extends State<LoginPage> {
               gradient:LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors:[Color(0xFF1A237E), Color(0xFFAD1457)],
+                colors:[Mainlayout.primaryColor, Mainlayout.accentColor],
               ),
             ),
             child: Stack(
@@ -157,7 +158,7 @@ class _LoginPageState extends State<LoginPage> {
                                     }
                                   }, 
                                   style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.purple.shade700,
+                                      backgroundColor: Mainlayout.inputFillColor,
                                       padding: const EdgeInsets.symmetric(vertical: 15),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(30)

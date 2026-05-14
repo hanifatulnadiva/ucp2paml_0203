@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ucp2paml_0203/logic/bloc/auth/auth_bloc.dart';
 import 'package:ucp2paml_0203/logic/bloc/auth/auth_event.dart';
 import 'package:ucp2paml_0203/logic/bloc/auth/auth_state.dart';
+import 'package:ucp2paml_0203/ui/widget/customPage.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -67,7 +68,7 @@ class _RegisterPageState extends State<RegisterPage> {
           width: double.infinity,
           height: double.infinity,
           decoration: const BoxDecoration(
-            gradient: LinearGradient(colors: [Color(0xFF1A237E), Color(0xFFAD1457)],
+            gradient: LinearGradient(colors: [Mainlayout.primaryColor, Mainlayout.accentColor],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -170,7 +171,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                       }
                                     },
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.redAccent.shade400,
+                                      backgroundColor: Mainlayout.inputFillColor,
                                       padding: const EdgeInsets.symmetric(vertical: 15),
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(30)
@@ -231,7 +232,7 @@ class _RegisterPageState extends State<RegisterPage> {
           suffixIcon: suffixIcon,
           border: InputBorder.none,
           errorStyle: const TextStyle(
-            color: Colors.yellowAccent,
+            color: Colors.redAccent,
             fontWeight: FontWeight.bold
           ),
           contentPadding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20)
