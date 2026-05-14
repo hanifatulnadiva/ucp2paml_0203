@@ -13,8 +13,8 @@ class KatalogModel {
   final int harga_mobil;
   final int kapasitas_mesin;
   final int kategoriId;
-  final KategoriModel? kategori; 
-  
+  final KategoriModel? kategori;
+
   KatalogModel({
     required this.id,
     required this.merk,
@@ -45,8 +45,8 @@ class KatalogModel {
       harga_mobil: json['harga_mobil'],
       kapasitas_mesin: json['kapasitas_mesin'],
       kategoriId: json['kategoriId'],
-      kategori: json['Kategori'] != null
-          ? KategoriModel.fromJson(json['Kategori'])
+      kategori: json['kategori'] != null
+          ? KategoriModel.fromJson(json['kategori'])
           : null,
     );
   }

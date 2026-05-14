@@ -9,8 +9,8 @@ class KategoriModel{
 
   factory KategoriModel.fromJson(Map<String,dynamic> json){
     return KategoriModel(
-      id: json['id'], 
-      jenis_mobil: json['jenis_mobil']
+      id: json['id'] ?? 0, 
+      jenis_mobil: json['jenis_mobil'] ?? ''
     );
   }
 }
